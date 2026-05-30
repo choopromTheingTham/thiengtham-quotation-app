@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เสนอราคาช่างพรชัย</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-blue-50 min-h-screen p-4">
+    <div class="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-6">
+        <h1 class="text-2xl font-bold text-blue-900 mb-6 text-center">ใบเสนอราคา</h1>
+        
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700">รายการงาน:</label>
+                <select id="work-select" class="w-full mt-1 p-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-400">
+                    <option value="850">ปูกระเบื้องยาง SPC (850.-/ตร.ม.)</option>
+                    <option value="500">ซ่อมรอยร้าวผนัง (500.-/จุด)</option>
+                    <option value="1200">ทาสีห้อง (1,200.-/จุด)</option>
+                </select>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-semibold text-gray-700">จำนวน:</label>
+                <input type="number" id="qty" value="1" class="w-full mt-1 p-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-400">
+            </div>
+
+            <button onclick="calculate()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">
+                คำนวณยอดรวม
+            </button>
+        </div>
+
+        <div id="result-area" class="mt-8 hidden p-4 bg-blue-50 rounded-xl border border-blue-100">
+            <p class="text-center text-gray-600">ราคาสุทธิรวม VAT 7%:</p>
+            <p class="text-3xl font-bold text-blue-900 text-center mt-2" id="total-text">0 บาท</p>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            const price = parseFloat(document.getElementById('work-select').value);
+            const qty = parseFloat(document.getElementById('qty').value);
+            const subtotal = price * qty;
+            const total = subtotal * 1.07; // บวก VAT 7%
+
+            document.getElementById('total-text').innerText = total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " บาท";
+            document.getElementById('result-area').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
