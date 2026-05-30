@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เที่ยงทำ - ใบเสนอราคา</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .print-page {
+            width: 210mm;
+            height: 297mm;
+            padding: 20mm;
+            margin: 0 auto;
+            background: white;
+            color: #333;
+            font-family: 'Courier New', monospace;
+        }
+        @media print {
+            body {
+                background: white;
+            }
+            .print-page {
+                width: auto;
+                height: auto;
+                margin: 0;
+                padding: 0;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+        .border-dotted {
+            border-style: dotted;
+        }
+        .page-break {
+            page-break-after: always;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 py-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Control Buttons -->
+        <div class="no-print mb-6 flex gap-4 justify-center">
+            <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg">
+                🖨️ พิมพ์ใบเสนอราคา
+            </button>
+            <button onclick="downloadPDF()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg">
+                📥 ดาวน์โหลด PDF
+            </button>
+            <button onclick="shareEmail()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg">
+                📧 ส่งเมล
+            </button>
+            <button onclick="goBack()" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg">
+                ← ย้อนกลับ
+            </button>
+        </div>
+
+        <!-- Print Page -->
+        <div class="print-page bg-white shadow-2xl">
+            <!-- Header -->
+            <div class="border-b-2 border-gray-800 pb-6 mb-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 rounded bg-yellow-500 flex items-center justify-center font-bold text-black text-lg">
+                                TT
+                            </div>
+                            <div>
+                                <h1 class="text-2xl font-bold text-gray-900">เที่ยงทำ ดีเวลลอปเม้นท์</h1>
+                                <p class="text-sm text-gray-600">บริการช่างประเทศไทย</p>
+                            </div>
+                        </div>
+                        <div class="text-sm text-gray-700 space-y-1">
+                            <p>📞 โทรศัพท์: 08-xxxx-xxxx</p>
+                            <p>📧 อีเมล: contact@thiengtham.com</p>
+                            <p>📍 ที่อยู่: อุดรธานี, ประเทศไทย</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-gray-800 font-bold text-3xl mb-2">ใบเสนอราคา</p>
+                        <p class="text-sm text-gray-600">QUOTATION</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Document Info -->
+            <div class="grid grid-cols-2 gap-8 mb-8">
+                <div class="text-sm">
+                    <p class="font-bold text-gray-900 mb-2">ข้อมูลเอกสาร:</p>
+                    <table class="w-full">
+                        <tr>
+                            <td class="text-gray-700 font-semibold w-1/3">เลขที่:</td>
+                            <td class="text-gray-900 font-bold">TT-QN-055-26</td>
+                        </tr>
+                        <tr>
+                            <td class="text-gray-700 font-semibold">วันที่ออก:</td>
+                            <td class="text-gray-900">30 พฤษภาคม 2569</td>
+                        </tr>
+                        <tr>
+                            <td class="text-gray-700 font-semibold">วันหมดอายุ:</td>
+                            <td class="text-gray-900">29 มิถุนายน 2569</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="text-sm">
+                    <p class="font-bold text-gray-900 mb-2">ลูกค้า:</p>
+                    <div class="border border-gray-800 p-3 rounded">
+                        <p class="font-bold text-gray-900">บ้านพักสัวง แพน</p>
+                        <p class="text-gray-700 text-xs mt-1">123 ซ.สุขประเสริฐ ต.เมืองอุดร อ.เมืองอุดร</p>
+                        <p class="text-gray-700 text-xs">จังหวัดอุดรธานี 41000</p>
+                        <p class="text-gray-700 text-xs mt-2">📱 08-xxxx-xxxx</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Items Table -->
+            <div class="mb-8">
+                <p class="font-bold text-gray-900 mb-3">รายการงาน:</p>
+                <table class="w-full border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-gray-200 border-2 border-gray-800">
+                            <th class="border border-gray-800 p-2 text-left">#</th>
+                            <th class="border border-gray-800 p-2 text-left">รายการ</th>
+                            <th class="border border-gray-800 p-2 text-center w-20">จำนวน</th>
+                            <th class="border border-gray-800 p-2 text-center w-16">หน่วย</th>
+                            <th class="border border-gray-800 p-2 text-right w-24">ราคาต่อหน่วย</th>
+                            <th class="border border-gray-800 p-2 text-right w-24">รวมเงิน</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border border-gray-800 p-2">1</td>
+                            <td class="border border-gray-800 p-2">ซ่อมรอยร้าวผนังและพื้น (ขนาดกลาง)</td>
+                            <td class="border border-gray-800 p-2 text-center">3</td>
+                            <td class="border border-gray-800 p-2 text-center">จุด</td>
+                            <td class="border border-gray-800 p-2 text-right">500.00</td>
+                            <td class="border border-gray-800 p-2 text-right">1,500.00</td>
+                        </tr>
+                        <tr>
+                            <td class="border border-gray-800 p-2">2</td>
+                            <td class="border border-gray-800 p-2">ทาสีห้องนอน (สีขาวครีม)</td>
+                            <td class="border border-gray-800 p-2 text-center">2</td>
+                            <td class="border border-gray-800 p-2 text-center">ห้อง</td>
+                            <td class="border border-gray-800 p-2 text-right">1,200.00</td>
+                            <td class="border border-gray-800 p-2 text-right">2,400.00</td>
+                        </tr>
+                        <tr>
+                            <td class="border border-gray-800 p-2">3</td>
+                            <td class="border border-gray-800 p-2">ปูกระเบื้องยาง SPC (พื้นห้องน้ำ)</td>
+                            <td class="border border-gray-800 p-2 text-center">4.5</td>
+                            <td class="border border-gray-800 p-2 text-center">ตร.ม.</td>
+                            <td class="border border-gray-800 p-2 text-right">850.00</td>
+                            <td class="border border-gray-800 p-2 text-right">3,825.00</td>
+                        </tr>
+                        <tr>
+                            <td class="border border-gray-800 p-2">4</td>
+                            <td class="border border-gray-800 p-2">วัสดุและค่าแรงในการจัดเรียง</td>
+                            <td class="border border-gray-800 p-2 text-center">1</td>
+                            <td class="border border-gray-800 p-2 text-center">ชุด</td>
+                            <td class="border border-gray-800 p-2 text-right">1,500.00</td>
+                            <td class="border border-gray-800 p-2 text-right">1,500.00</td>
+                        </tr>
+                        <tr class="bg-gray-100 font-bold">
+                            <td colspan="5" class="border border-gray-800 p-2 text-right">รวมย่อย</td>
+                            <td class="border border-gray-800 p-2 text-right">9,225.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Summary -->
+            <div class="grid grid-cols-3 gap-4 mb-8">
+                <div></div>
+                <div></div>
+                <div class="border-2 border-gray-800 p-4 space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="font-semibold">รวมย่อย:</span>
+                        <span class="font-bold">9,225.00 บาท</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-semibold">ส่วนลด:</span>
+                        <span class="font-bold">500.00 บาท</span>
+                    </div>
+                    <div class="border-t-2 border-gray-800 pt-2 mt-2">
+                        <div class="flex justify-between text-base">
+                            <span class="font-bold">รวมก่อน VAT:</span>
+                            <span class="font-bold">8,725.00 บาท</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between text-sm bg-gray-100 p-2 rounded">
+                        <span class="font-semibold">VAT 7%:</span>
+                        <span class="font-bold">610.75 บาท</span>
+                    </div>
+                    <div class="border-t-2 border-gray-800 pt-2 bg-yellow-100 p-2 rounded">
+                        <div class="flex justify-between text-lg">
+                            <span class="font-bold">รวมสุทธิ:</span>
+                            <span class="font-bold text-red-600">9,335.75 บาท</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terms & Conditions -->
+            <div class="border-t-2 border-gray-800 pt-6 mb-6 text-xs">
+                <p class="font-bold text-gray-900 mb-2">เงื่อไขการชำระเงิน:</p>
+                <ul class="list-disc list-inside space-y-1 text-gray-700">
+                    <li>ชำระค่ามัดจำ 50% เมื่อเริ่มงาน และชำระส่วนที่เหลือเมื่องานเสร็จ</li>
+                    <li>ราคาใบเสนอราคานี้มีอายุ 30 วันนับจากวันที่ออกเอกสาร</li>
+                    <li>การประมาณการนี้ไม่รวมค่าใช้สอยเพิ่มเติม (ถ้ามี)</li>
+                    <li>สามารถเลื่อนการทำงานได้โดยแจ้งล่วงหน้า 3 วัน</li>
+                </ul>
+            </div>
+
+            <!-- Notes -->
+            <div class="border-t-2 border-gray-800 pt-6 mb-6 text-xs">
+                <p class="font-bold text-gray-900 mb-2">หมายเหตุ:</p>
+                <p class="text-gray-700 leading-relaxed">
+                    ราคาข้างต้นประมาณการตามทำเนียบมูลค่าของวัสดุและค่าแรงที่เป็นปัจจุบัน หากมีการเปลี่ยนแปลงใดๆ ในการทำงาน เราจะแจ้งให้ทราบล่วงหน้า ยิ่งไปกว่านั้น เมื่องานเสร็จสิ้น เราจะรับประกันคุณภาพการทำงาน 1 ปี
+                </p>
+            </div>
+
+            <!-- Signature Section -->
+            <div class="border-t-2 border-gray-800 pt-6">
+                <div class="grid grid-cols-2 gap-12 text-center text-xs">
+                    <div>
+                        <p class="font-bold text-gray-900 mb-8">ลูกค้า/Customer</p>
+                        <p class="border-t border-gray-800 pt-2 text-gray-700">ลงชื่อ ______________________</p>
+                        <p class="text-gray-700">วันที่ ______________________</p>
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-900 mb-8">เที่ยงทำ ดีเวลลอปเม้นท์</p>
+                        <p class="border-t border-gray-800 pt-2 text-gray-700">ลงชื่อ ______________________</p>
+                        <p class="text-gray-700">วันที่ ______________________</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center text-xs text-gray-600 mt-12 pt-6 border-t border-gray-400">
+                <p>ขอบคุณที่ไว้วางใจ เที่ยงทำ ดีเวลลอปเม้นท์</p>
+                <p class="mt-1">Thank you for your trust in Thiengtham Development</p>
+            </div>
+        </div>
+
+        <!-- Additional Pages Info -->
+        <div class="no-print mt-8 text-center text-gray-600">
+            <p class="text-sm">นี่คือตัวอย่างหน้าจอการพิมพ์ใบเสนอราคา</p>
+            <p class="text-sm mt-2">กดปุ่ม "🖨️ พิมพ์ใบเสนอราคา" เพื่อดูตัวอย่างการพิมพ์</p>
+        </div>
+    </div>
+
+    <script>
+        function downloadPDF() {
+            alert('ฟีเจอร์นี้ต้องติดตั้ง library เพิ่มเติม\nในแอป React จริง สามารถใช้ jsPDF หรือ html2pdf ได้');
+        }
+
+        function shareEmail() {
+            const email = 'customer@example.com';
+            const subject = 'ใบเสนอราคา TT-QN-055-26';
+            const body = 'เรียน ลูกค้า\n\nตามมาพร้อมนี้เป็นใบเสนอราคาสำหรับการให้บริการของเรา\n\nหากมีข้อสงสัยติดต่อเราได้ที่ 08-xxxx-xxxx';
+            
+            window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        }
+
+        function goBack() {
+            if (confirm('ต้องการกลับไปหน้าหลักหรือไม่?')) {
+                window.history.back();
+            }
+        }
+    </script>
+</body>
+</html>
