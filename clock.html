@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital World Clock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 min-h-screen p-6">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <div class="flex items-center justify-center gap-3 mb-4">
+                <span class="text-4xl">🕐</span>
+                <h1 class="text-4xl font-bold text-white">World Clock</h1>
+                <span class="text-4xl">🌍</span>
+            </div>
+            <p class="text-slate-400 text-lg">Current time across multiple time zones</p>
+        </div>
+
+        <!-- Time Zone Selector -->
+        <div class="bg-slate-800/50 backdrop-blur border border-slate-700 rounded-xl p-6 mb-8">
+            <h2 class="text-xl font-semibold text-white mb-4">Select Time Zones</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3" id="timezone-buttons">
+                <!-- จะถูกสร้างโดย JavaScript -->
+            </div>
+        </div>
+
+        <!-- Clocks Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="clocks-container">
+            <!-- จะถูกสร้างโดย JavaScript -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="text-center py-12">
+            <div class="text-6xl mb-4">🌍</div>
+            <p class="text-slate-400 text-lg">Select time zones to display clocks</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-12 text-center">
+            <p class="text-slate-500 text-sm">🌍 All times update automatically every second</p>
+        </div>
+    </div>
+
+    <script>
+        const timeZones = [
+            { name: 'UTC', label: 'UTC (Coordinated Universal Time)', offset: 'UTC' },
+            { name: 'Bangkok', label: 'Bangkok (ICT)', offset: 'Asia/Bangkok' },
+            { name: 'Tokyo', label: 'Tokyo (JST)', offset: 'Asia/Tokyo' },
+            { name: 'Shanghai', label: 'Shanghai (CST)', offset: 'Asia/Shanghai' },
+            { name: 'Singapore', label: 'Singapore (SGT)', offset: 'Asia/Singapore' },
+            { name: 'Hong Kong', label: 'Hong Kong (HKT)', offset: 'Asia/Hong_Kong' },
+            { name: 'Dubai', label: 'Dubai (GST)', offset: 'Asia/Dubai' },
+            { name: 'India', label: 'India (IST)', offset: 'Asia/Kolkata' },
+            { name: 'London', label: 'London (GMT/BST)', offset: 'Europe/London' },
+            { name: 'Paris', label: 'Paris (CET/CEST)', offset: 'Europe/Paris' },
+            { name: 'NewYork', label: 'New York (EST/EDT)', offset: 'America/New_York' },
+            { name: 'LosAngeles', label: 'Los Angeles (PST/PDT)', offset: 'America/Los_Angeles' },
+            { name: 'Sydney', label: 'Sydney (AEDT/AEST)', offset: 'Australia/Sydney' },
+        ];
+
+        let selectedZones = ['Bangkok', 'UTC', 'Tokyo', 'NewYork'];
+
+        // Initialize timezone buttons
+        function initializeButtons() {
+            const container = document.getElementById('timezone-buttons');
+            container.innerHTML = '';
+            
+            timeZones.forEach(zone => {
+                const button = document.createElement('button');
+                button.textContent = zone.name;
+                button.className = `px-4 py-2 rounded-lg font-medium transition-all ${
+                    selectedZones.includes(zone.name)
+                        ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/50'
+                        : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                }`;
+                
+                button.onclick = () => toggleZone(zone.name);
+                container.appendChild(button);
+            });
+        }
+
+        // Toggle timezone selection
+        function toggleZone(zoneName) {
+            const index = selectedZones.indexOf(zoneName);
+            if (index > -1) {
+                selectedZones.splice(index, 1);
+            } else {
+                selectedZones.push(zoneName);
+            }
+            updateDisplay();
+        }
+
+        // Format time for timezone
+        function getTimeForZone(offset) {
+            try {
+                const formatter = new Intl.DateTimeFormat('en-US', {
+                    timeZone: offset,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false,
+                });
+                
+                const dateFormatter = new Intl.DateTimeFormat('en-US', {
+                    timeZone: offset,
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                });
+
+                return {
+                    time: formatter.format(new Date()),
+                    date: dateFormatter.format(new Date())
+                };
+            } catch (error) {
+                console.error('Error formatting time:', error);
+                return { time: '--:--:--', date: '--/--/--' };
+            }
+        }
+
+        // Update clock display
+        function updateDisplay() {
+            const container = document.getElementById('clocks-container');
+            const emptyState = document.getElementById('empty-state');
+            
+            container.innerHTML = '';
+            
+            if (selectedZones.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            selectedZones.forEach(zoneName => {
+                const zone = timeZones.find(z => z.name === zoneName);
+                if (!zone) return;
+                
+                const timeData = getTimeForZone(zone.offset);
+                
+                const clockDiv = document.createElement('div');
+                clockDiv.className = 'bg-gradient-to-br from-slate-700 to-slate-800 border border-slate-600 rounded-xl p-8 shadow-xl hover:shadow-2xl transition-all';
+                clockDiv.innerHTML = `
+                    <!-- Digital Display -->
+                    <div class="bg-black/50 rounded-lg p-6 mb-4 border border-slate-600">
+                        <div class="font-mono text-5xl font-bold text-cyan-400 text-center tracking-wider">
+                            ${timeData.time}
+                        </div>
+                        <div class="text-center text-slate-400 text-sm mt-3 font-mono">
+                            ${timeData.date}
+                        </div>
+                    </div>
+
+                    <!-- Timezone Info -->
+                    <div class="text-center">
+                        <p class="text-slate-300 font-semibold text-lg">${zoneName}</p>
+                        <p class="text-slate-500 text-sm">${zone.label}</p>
+                    </div>
+
+                    <!-- Analog-style indicator -->
+                    <div class="mt-4 flex justify-center">
+                        <div class="w-24 h-24 rounded-full border-4 border-slate-600 flex items-center justify-center">
+                            <div class="relative w-20 h-20">
+                                <!-- Hour markers -->
+                                ${[...Array(12)].map((_, i) => `
+                                    <div
+                                        class="absolute w-1 h-2 bg-slate-500"
+                                        style="
+                                            left: 50%;
+                                            bottom: 50%;
+                                            transform: translateX(-50%) rotate(${i * 30}deg) translateY(-40px);
+                                            transform-origin: bottom;
+                                        "
+                                    ></div>
+                                `).join('')}
+                                <!-- Center dot -->
+                                <div class="absolute w-2 h-2 bg-cyan-400 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(clockDiv);
+            });
+            
+            initializeButtons();
+        }
+
+        // Update every second
+        setInterval(updateDisplay, 1000);
+        
+        // Initial display
+        updateDisplay();
+    </script>
+</body>
+</html>
