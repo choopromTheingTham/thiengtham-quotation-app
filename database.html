@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เที่ยงทำ - ฐานข้อมูลราคา</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #1a1a1a;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .phone-screen {
+            width: 100%;
+            max-width: 500px;
+            background: #121212;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .status-bar {
+            background: #000;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #888;
+            border-bottom: 1px solid #333;
+        }
+        .header-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+        }
+        .back-btn {
+            font-size: 24px;
+            cursor: pointer;
+            color: #ffb800;
+        }
+        .header-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffb800;
+            flex: 1;
+            margin-left: 16px;
+        }
+        .add-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #00cc66 0%, #00aa55 100%);
+            border: 1px solid #00dd77;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 204, 102, 0.3);
+        }
+        .controls {
+            padding: 16px;
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 13px;
+        }
+        .search-input::placeholder {
+            color: #666;
+        }
+        .import-btn {
+            width: 100%;
+            padding: 10px 12px;
+            background: linear-gradient(135deg, #6b5b95 0%, #4a4a7a 100%);
+            border: 2px solid #7a6ba5;
+            border-radius: 12px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .import-btn:hover {
+            border-color: #9a8bc5;
+            background: linear-gradient(135deg, #7b6ba5 0%, #5a5a8a 100%);
+        }
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            padding-bottom: 20px;
+        }
+        .item-count {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 12px;
+        }
+        .price-item {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+        .price-item:hover {
+            border-color: #444;
+            background: linear-gradient(135deg, #323232 0%, #222222 100%);
+        }
+        .item-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .item-price {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffb800;
+            margin-bottom: 12px;
+        }
+        .item-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .edit-btn {
+            flex: 1;
+            padding: 8px 12px;
+            background: transparent;
+            border: 2px solid #4a9eff;
+            border-radius: 8px;
+            color: #4a9eff;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .edit-btn:hover {
+            background: rgba(74, 158, 255, 0.1);
+            box-shadow: 0 0 8px rgba(74, 158, 255, 0.2);
+        }
+        .delete-btn {
+            flex: 1;
+            padding: 8px 12px;
+            background: transparent;
+            border: 2px solid #cc4444;
+            border-radius: 8px;
+            color: #cc4444;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .delete-btn:hover {
+            background: rgba(204, 68, 68, 0.1);
+            box-shadow: 0 0 8px rgba(204, 68, 68, 0.2);
+        }
+        .content::-webkit-scrollbar {
+            width: 4px;
+        }
+        .content::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        .content::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-screen">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>VoWiFi 📶 35.6 K/s</span>
+            <span>🔋 51% 16:15</span>
+        </div>
+
+        <!-- Header -->
+        <div class="header-nav">
+            <span class="back-btn" onclick="goBack()">←</span>
+            <span class="header-title">ฐานข้อมูลราคา</span>
+            <button class="add-btn" onclick="addNewItem()">+ เพิ่ม</button>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <input 
+                type="text" 
+                id="search-input" 
+                class="search-input" 
+                placeholder="ค้นหางาน..." 
+                onkeyup="filterItems()"
+            >
+            <button class="import-btn" onclick="importExcel()">
+                📥 นำเข้าจาก Excel (.xlsx)
+            </button>
+            <div style="font-size: 11px; color: #666;">
+                คอลัมน์ใน Excel: A=ชื่องาน B=หน่วย C=ราคา
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="item-count" id="item-count">21 รายการ</div>
+
+            <!-- Price Items -->
+            <div id="items-container">
+                <!-- Items will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        const priceDatabase = [
+            {
+                id: 1,
+                name: "แก้ไขผนังแตกร้าว บุดรอยร้าวและเชาะร้อง V อุดรอยร้าว ด้วย non-shrink",
+                unit: "งาน",
+                price: 4650.00
+            },
+            {
+                id: 2,
+                name: "งานรีอุประเบื้องยาง SPC (รวมพื้นกระเบื้องยาง)",
+                unit: "ตร.ม.",
+                price: 850.00
+            },
+            {
+                id: 3,
+                name: "งานหาสีผนังภายใน (สีเบเยอร์ ดูคล ภายใน คึ่งเงาหรือเทียบเท่า)",
+                unit: "ตร.ม.",
+                price: 580.00
+            },
+            {
+                id: 4,
+                name: "งานไม้วชิดและทาสีระเบียงนอก",
+                unit: "ตร.ม.",
+                price: 620.00
+            },
+            {
+                id: 5,
+                name: "รื่อและประเบื้องพื้นห้องนั้า (ไม่รวมกระเบื้อง)",
+                unit: "ตร.ม.",
+                price: 950.00
+            },
+            {
+                id: 6,
+                name: "งานรีอุและติดตั้งสุขภัณฑ์",
+                unit: "งาน",
+                price: 2500.00
+            },
+            {
+                id: 7,
+                name: "ซ่อมรอยร้าวผนัง",
+                unit: "จุด",
+                price: 500.00
+            },
+            {
+                id: 8,
+                name: "ทาสีห้อง",
+                unit: "ห้อง",
+                price: 1200.00
+            },
+            {
+                id: 9,
+                name: "ปูกระเบื้องยาง SPC",
+                unit: "ตร.ม.",
+                price: 850.00
+            },
+            {
+                id: 10,
+                name: "ซ่อมพื้นหลวม",
+                unit: "จุด",
+                price: 300.00
+            },
+            {
+                id: 11,
+                name: "ติดตั้งช่องแอร์",
+                unit: "ช่อง",
+                price: 800.00
+            },
+            {
+                id: 12,
+                name: "ทำความสะอาดหลังเสร็จงาน",
+                unit: "ชั่วโมง",
+                price: 250.00
+            },
+            {
+                id: 13,
+                name: "ซ่อมประตู",
+                unit: "บาน",
+                price: 400.00
+            },
+            {
+                id: 14,
+                name: "ติดตั้งสวิตช์และเต้าไฟ",
+                unit: "ตัว",
+                price: 150.00
+            },
+            {
+                id: 15,
+                name: "ซ่อมกำแพง",
+                unit: "ตร.ม.",
+                price: 450.00
+            },
+            {
+                id: 16,
+                name: "ปูกระเบื้องผนัง",
+                unit: "ตร.ม.",
+                price: 650.00
+            },
+            {
+                id: 17,
+                name: "ติดตั้งลวดลายตกแต่ง",
+                unit: "เมตร",
+                price: 120.00
+            },
+            {
+                id: 18,
+                name: "ซ่อมบัญชีรั้ว",
+                unit: "เมตร",
+                price: 350.00
+            },
+            {
+                id: 19,
+                name: "ทาสีรั้ว",
+                unit: "เมตร",
+                price: 200.00
+            },
+            {
+                id: 20,
+                name: "ติดตั้งบานประตูเลื่อน",
+                unit: "บาน",
+                price: 1500.00
+            },
+            {
+                id: 21,
+                name: "ซ่อมหลังคารั่ว",
+                unit: "ตร.ม.",
+                price: 300.00
+            }
+        ];
+
+        let filteredData = [...priceDatabase];
+
+        function renderItems() {
+            const container = document.getElementById('items-container');
+            container.innerHTML = '';
+
+            filteredData.forEach(item => {
+                const itemHTML = `
+                    <div class="price-item">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-price">฿${item.price.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} / ${item.unit}</div>
+                        <div class="item-actions">
+                            <button class="edit-btn" onclick="editItem(${item.id})">แก้ไข</button>
+                            <button class="delete-btn" onclick="deleteItem(${item.id})">ลบ</button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += itemHTML;
+            });
+
+            document.getElementById('item-count').textContent = `${filteredData.length} รายการ`;
+        }
+
+        function filterItems() {
+            const search = document.getElementById('search-input').value.toLowerCase();
+            filteredData = priceDatabase.filter(item => 
+                item.name.toLowerCase().includes(search)
+            );
+            renderItems();
+        }
+
+        function addNewItem() {
+            const name = prompt('ชื่องาน:');
+            if (!name) return;
+            
+            const unit = prompt('หน่วย (เช่น ตร.ม., งาน, ชั่วโมง):');
+            if (!unit) return;
+            
+            const price = parseFloat(prompt('ราคา:'));
+            if (isNaN(price)) {
+                alert('กรุณาใส่ราคาเป็นตัวเลข');
+                return;
+            }
+
+            const newItem = {
+                id: Math.max(...priceDatabase.map(i => i.id), 0) + 1,
+                name: name,
+                unit: unit,
+                price: price
+            };
+
+            priceDatabase.push(newItem);
+            filteredData = [...priceDatabase];
+            renderItems();
+            alert('✓ เพิ่มรายการสำเร็จ');
+        }
+
+        function editItem(id) {
+            const item = priceDatabase.find(i => i.id === id);
+            if (!item) return;
+
+            const name = prompt('ชื่องาน:', item.name) || item.name;
+            const unit = prompt('หน่วย:', item.unit) || item.unit;
+            const price = parseFloat(prompt('ราคา:', item.price)) || item.price;
+
+            item.name = name;
+            item.unit = unit;
+            item.price = price;
+
+            filteredData = [...priceDatabase];
+            renderItems();
+            alert('✓ แก้ไขสำเร็จ');
+        }
+
+        function deleteItem(id) {
+            if (confirm('ต้องการลบรายการนี้หรือไม่?')) {
+                priceDatabase.splice(priceDatabase.findIndex(i => i.id === id), 1);
+                filteredData = [...priceDatabase];
+                renderItems();
+                alert('✓ ลบสำเร็จ');
+            }
+        }
+
+        function importExcel() {
+            alert('📥 ฟีเจอร์นำเข้า Excel\n\nในแอป React จริงจะใช้ library เช่น xlsx\nสำหรับอ่านไฟล์ Excel');
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // Initialize
+        renderItems();
+    </script>
+</body>
+</html>
