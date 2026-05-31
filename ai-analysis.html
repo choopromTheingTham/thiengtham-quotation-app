@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เที่ยงทำ - วิเคราะห์ AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #1a1a1a;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .phone-screen {
+            width: 100%;
+            max-width: 500px;
+            background: #121212;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .status-bar {
+            background: #000;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #888;
+            border-bottom: 1px solid #333;
+        }
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 16px;
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+        }
+        .back-btn {
+            font-size: 24px;
+            cursor: pointer;
+            color: #ffb800;
+        }
+        .header-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffb800;
+            flex: 1;
+        }
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            padding-bottom: 100px;
+        }
+        .section {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .section-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffb800;
+            margin-bottom: 8px;
+        }
+        .section-desc {
+            font-size: 13px;
+            color: #999;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        .example-box {
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 12px;
+            padding: 12px;
+            margin: 12px 0;
+            font-size: 12px;
+            color: #aaa;
+        }
+        .upload-btn {
+            width: 100%;
+            padding: 12px;
+            background: #444;
+            border: 2px dashed #666;
+            border-radius: 12px;
+            color: #fff;
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            margin-bottom: 12px;
+        }
+        .upload-btn:hover {
+            border-color: #ffb800;
+            background: #333;
+        }
+        .action-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #ffb800 0%, #ff9500 100%);
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            margin-top: 16px;
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 184, 0, 0.3);
+        }
+        .action-btn:active {
+            transform: translateY(0);
+        }
+        .info-text {
+            font-size: 11px;
+            color: #666;
+            margin-top: 12px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-screen">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>VoWiFi 📶 802 B/s</span>
+            <span>🔋 63% 13:55</span>
+        </div>
+
+        <!-- Header -->
+        <div class="header-nav">
+            <span class="back-btn" onclick="goBack()">←</span>
+            <span class="header-title">วิเคราะห์ AI</span>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- AI Analysis Section -->
+            <div class="section">
+                <div class="section-icon">✨</div>
+                <div class="section-title">พิมพ์รายละเอียดงาน หรือแนบรูปไม่เสริจ</div>
+                <div class="section-desc">
+                    AI จะช่วยวิเคราะห์และคำนวนหาพื้นที่ตามในรูป แล้วสร้างใบเสนอราคาให้
+                </div>
+                
+                <!-- Example -->
+                <div class="example-box">
+                    <strong>ตัวอย่าง:</strong>
+                    <div style="margin-top: 8px;">
+                        แก้ไขผนังแตกร้าว 1 งาน, รีอุประเบื้องยาง SPC 15 ตร.ม.
+                    </div>
+                </div>
+
+                <!-- Input Text -->
+                <textarea 
+                    id="ai-input" 
+                    placeholder="พิมพ์รายละเอียดงาน..."
+                    style="
+                        width: 100%;
+                        padding: 12px;
+                        background: #1a1a1a;
+                        border: 1px solid #444;
+                        border-radius: 12px;
+                        color: #fff;
+                        font-size: 13px;
+                        resize: vertical;
+                        height: 100px;
+                        margin: 12px 0;
+                    "
+                ></textarea>
+
+                <!-- Upload Image -->
+                <label class="upload-btn">
+                    📷 เลือกรูป
+                    <input type="file" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+                </label>
+                <div id="image-info" style="font-size: 12px; color: #666; text-align: center;"></div>
+
+                <!-- AI Analysis Button -->
+                <button class="action-btn" onclick="analyzeAI()">
+                    ✨ วิเคราะห์และสร้างไม่เสนอราคา
+                </button>
+
+                <div class="info-text">
+                    💡 ระบบ AI จะวิเคราะห์รูปและข้อมูลที่ให้มา แล้วประมาณการราคาตามฐานข้อมูล
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('image-info').innerHTML = 
+                        `✓ อัพโหลด: ${file.name}<br><small>${(file.size / 1024).toFixed(2)} KB</small>`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function analyzeAI() {
+            const input = document.getElementById('ai-input').value;
+            const imageInfo = document.getElementById('image-info').textContent;
+
+            if (!input && !imageInfo) {
+                alert('กรุณาพิมพ์รายละเอียดหรืออัพโหลดรูป');
+                return;
+            }
+
+            alert('✓ กำลังวิเคราะห์...\n\nในแอป React จริงจะส่งไปที่ Backend API');
+            
+            // ในแอป React จริงจะส่งไปที่ Backend
+            // และสร้างใบเสนอราคา แล้วไปหน้า create
+        }
+    </script>
+</body>
+</html>
