@@ -3,48 +3,294 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เสนอราคาช่างพรชัย</title>
+    <title>เที่ยงทำ - ดีเวลลอปเม้นท์</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #1a1a1a;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .phone-screen {
+            width: 100%;
+            max-width: 500px;
+            background: #121212;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .status-bar {
+            background: #000;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #888;
+            border-bottom: 1px solid #333;
+        }
+        .status-left, .status-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .header {
+            padding: 24px 16px;
+            border-bottom: 1px solid #333;
+        }
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
+        }
+        .header-text h1 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff6666;
+            margin-bottom: 4px;
+            line-height: 1.2;
+        }
+        .header-text p {
+            font-size: 12px;
+            color: #888;
+        }
+        .contact {
+            font-size: 11px;
+            color: #666;
+            margin-top: 8px;
+        }
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            padding-bottom: 80px;
+        }
+        .stats-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 16px 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .stat-card:hover {
+            border-color: #ff6666;
+            background: linear-gradient(135deg, #3a2a2a 0%, #2a1a1a 100%);
+        }
+        .stat-label {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .stat-value.orange { color: #ffb800; }
+        .stat-value.blue { color: #4a9eff; }
+        .stat-value.green { color: #00ff00; }
+        .stat-desc {
+            font-size: 10px;
+            color: #666;
+        }
+        .section-title {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        .features-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .feature-card {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 20px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            border-color: #ff6666;
+            background: linear-gradient(135deg, #3a2a2a 0%, #2a1a1a 100%);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(255, 102, 102, 0.1);
+        }
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+        .feature-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+        .feature-desc {
+            font-size: 11px;
+            color: #888;
+        }
+        .content::-webkit-scrollbar {
+            width: 4px;
+        }
+        .content::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        .content::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 2px;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            background: #000;
+            border-top: 1px solid #333;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 60px;
+            z-index: 100;
+        }
+        .nav-item {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.3s ease;
+        }
+        .nav-item:hover {
+            color: #ff6666;
+        }
+        .nav-item.active {
+            color: #ff6666;
+        }
+    </style>
 </head>
-<body class="bg-blue-50 min-h-screen p-4">
-    <div class="max-w-md mx-auto bg-white rounded-2xl shadow-lg p-6">
-        <h1 class="text-2xl font-bold text-blue-900 mb-6 text-center">ใบเสนอราคา</h1>
-        
-        <div class="space-y-4">
-            <div>
-                <label class="block text-sm font-semibold text-gray-700">รายการงาน:</label>
-                <select id="work-select" class="w-full mt-1 p-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-400">
-                    <option value="850">ปูกระเบื้องยาง SPC (850.-/ตร.ม.)</option>
-                    <option value="500">ซ่อมรอยร้าวผนัง (500.-/จุด)</option>
-                    <option value="1200">ทาสีห้อง (1,200.-/จุด)</option>
-                </select>
+<body>
+    <div class="phone-screen">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-left">
+                <span>VoWiFi</span>
+                <span>📶</span>
+                <span>📡</span>
             </div>
-            
-            <div>
-                <label class="block text-sm font-semibold text-gray-700">จำนวน:</label>
-                <input type="number" id="qty" value="1" class="w-full mt-1 p-3 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-400">
+            <div class="status-right">
+                <span>🔋 63%</span>
+                <span>13:55</span>
             </div>
-
-            <button onclick="calculate()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">
-                คำนวณยอดรวม
-            </button>
         </div>
 
-        <div id="result-area" class="mt-8 hidden p-4 bg-blue-50 rounded-xl border border-blue-100">
-            <p class="text-center text-gray-600">ราคาสุทธิรวม VAT 7%:</p>
-            <p class="text-3xl font-bold text-blue-900 text-center mt-2" id="total-text">0 บาท</p>
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <div class="logo">🔥</div>
+                <div class="header-text">
+                    <h1>เที่ยงทำ ดีเวลลอปเม้นท์</h1>
+                    <p>ระบบไม่เสนอราคา</p>
+                    <div class="contact">นายพระชัย ชูพรม · โทร 062-069-8888</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Stats Section -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-label">ทั้งหมด</div>
+                    <div class="stat-value orange">0 ใบ</div>
+                    <div class="stat-desc">แตะเพื่อดู</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">เดือนนี้</div>
+                    <div class="stat-value blue">0 ใบ</div>
+                    <div class="stat-desc">แตะเพื่อดู</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">มูลค่ารวม</div>
+                    <div class="stat-value green">฿0K</div>
+                    <div class="stat-desc">แตะเพื่อดู</div>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="section-title">เมนูหลัก</div>
+            <div class="features-container">
+                <div class="feature-card" onclick="goTo('demo.html')">
+                    <div class="feature-icon">✨</div>
+                    <div class="feature-title">วิเคราะห์ AI</div>
+                    <div class="feature-desc">สร้างไม่เสนอราคาอัตโนมัติ</div>
+                </div>
+                <div class="feature-card" onclick="goTo('demo.html')">
+                    <div class="feature-icon">➕</div>
+                    <div class="feature-title">สร้างไม่เสนอราคา</div>
+                    <div class="feature-desc">กรอกข้อมูลด้วยตนเอง</div>
+                </div>
+                <div class="feature-card" onclick="goTo('demo.html')">
+                    <div class="feature-icon">📁</div>
+                    <div class="feature-title">ไม่เสนอราคา</div>
+                    <div class="feature-desc">0 รายการ</div>
+                </div>
+                <div class="feature-card" onclick="goTo('clock.html')">
+                    <div class="feature-icon">💰</div>
+                    <div class="feature-title">ธานชำนวณราคา</div>
+                    <div class="feature-desc">จัดการราคางาน</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="goTo('index.html')">🏠</div>
+            <div class="nav-item" onclick="goTo('demo.html')">➕</div>
+            <div class="nav-item" onclick="goTo('demo.html')">📋</div>
+            <div class="nav-item" onclick="goTo('demo.html')">⚙️</div>
         </div>
     </div>
 
     <script>
-        function calculate() {
-            const price = parseFloat(document.getElementById('work-select').value);
-            const qty = parseFloat(document.getElementById('qty').value);
-            const subtotal = price * qty;
-            const total = subtotal * 1.07; // บวก VAT 7%
-
-            document.getElementById('total-text').innerText = total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + " บาท";
-            document.getElementById('result-area').classList.remove('hidden');
+        function goTo(page) {
+            if (page !== 'index.html') {
+                window.location.href = page;
+            }
         }
     </script>
 </body>
