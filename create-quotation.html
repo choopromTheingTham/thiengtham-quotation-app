@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เที่ยงทำ - สร้างใบเสนอราคา</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #1a1a1a;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .phone-screen {
+            width: 100%;
+            max-width: 500px;
+            background: #121212;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .status-bar {
+            background: #000;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #888;
+            border-bottom: 1px solid #333;
+        }
+        .header-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+        }
+        .back-btn {
+            font-size: 24px;
+            cursor: pointer;
+            color: #ffb800;
+        }
+        .header-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffb800;
+            flex: 1;
+            margin-left: 16px;
+        }
+        .save-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #ffb800 0%, #ff9500 100%);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 184, 0, 0.3);
+        }
+        .tabs {
+            display: flex;
+            gap: 0;
+            background: #1a1a1a;
+            border-bottom: 2px solid #333;
+            overflow-x: auto;
+        }
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #888;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .tab.active {
+            color: #ffb800;
+            border-bottom-color: #ffb800;
+        }
+        .tab:hover {
+            color: #fff;
+        }
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            padding-bottom: 100px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-label {
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 6px;
+            display: block;
+            font-weight: 600;
+        }
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 13px;
+        }
+        .form-input::placeholder {
+            color: #666;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #ffb800;
+            background: #333;
+        }
+        .textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .item-card {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        .item-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        .item-price {
+            font-size: 14px;
+            color: #ffb800;
+            margin-bottom: 8px;
+        }
+        .item-qty {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 8px;
+        }
+        .qty-input {
+            width: 60px;
+            padding: 4px 8px;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: #fff;
+            text-align: center;
+        }
+        .remove-item-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #cc4444;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        .remove-item-btn:hover {
+            background: #dd5555;
+        }
+        .add-item-btn {
+            width: 100%;
+            padding: 12px;
+            background: #2a2a2a;
+            border: 2px dashed #444;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 16px;
+        }
+        .add-item-btn:hover {
+            border-color: #ffb800;
+            background: #333;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 13px;
+            border-bottom: 1px solid #333;
+        }
+        .summary-row.total {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffb800;
+            border-bottom: none;
+            padding: 12px 0;
+        }
+        .summary-label {
+            color: #aaa;
+        }
+        .summary-value {
+            color: #fff;
+            text-align: right;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 12px 0;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .bottom-button {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 32px);
+            max-width: 468px;
+            padding: 12px;
+            background: linear-gradient(135deg, #ffb800 0%, #ff9500 100%);
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .bottom-button:hover {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 184, 0, 0.3);
+        }
+        .content::-webkit-scrollbar {
+            width: 4px;
+        }
+        .content::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        .content::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-screen">
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>VoWiFi 📶 82 B/s</span>
+            <span>🔋 82% 17:05</span>
+        </div>
+
+        <!-- Header -->
+        <div class="header-nav">
+            <span class="back-btn" onclick="goBack()">←</span>
+            <span class="header-title">สร้างใบเสนอราคา</span>
+            <button class="save-btn" onclick="saveDraft()">บันทึก</button>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('info')">ข้อมูล</div>
+            <div class="tab" onclick="switchTab('items')">รายการ</div>
+            <div class="tab" onclick="switchTab('summary')">สรุป</div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Tab 1: ข้อมูล -->
+            <div class="tab-content active" id="tab-info">
+                <div class="form-group">
+                    <label class="form-label">เลขที่ไม่เสนอราคา</label>
+                    <input type="text" id="qn-number" class="form-input" value="TT-QN-" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">ชื่อลูกค้า</label>
+                    <input type="text" id="customer-name" class="form-input" placeholder="ชื่อ-นามสกุล">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">ที่อยู่</label>
+                    <textarea id="customer-address" class="form-input textarea" placeholder="ที่อยู่"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">โทรศัพท์</label>
+                    <input type="tel" id="customer-phone" class="form-input" placeholder="0xx-xxx-xxxx">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">โครงการ / สถานที่</label>
+                    <input type="text" id="project-name" class="form-input" placeholder="ชื่อโครงการ">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">วันที่เสนอราคา</label>
+                    <input type="date" id="quote-date" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">หมายเหตุ</label>
+                    <textarea id="notes" class="form-input textarea" placeholder="*งานนอกเหนือจากนี้เป็นงานเพิ่มเติมได้"></textarea>
+                </div>
+            </div>
+
+            <!-- Tab 2: รายการ -->
+            <div class="tab-content" id="tab-items">
+                <button class="add-item-btn" onclick="addItemFromDB()">+ เพิ่มรายการจากฐานข้อมูล</button>
+
+                <div id="items-list">
+                    <!-- Items will be added here -->
+                </div>
+
+                <button class="add-item-btn" onclick="addCustomItem()">+ เพิ่มรายการกำหนดเอง</button>
+            </div>
+
+            <!-- Tab 3: สรุป -->
+            <div class="tab-content" id="tab-summary">
+                <div style="background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%); border: 1px solid #333; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+                    <div class="summary-row">
+                        <span class="summary-label">รวมค่าแรง/วัสดุ</span>
+                        <span class="summary-value" id="subtotal">฿0.00</span>
+                    </div>
+
+                    <div class="form-group" style="margin: 12px 0;">
+                        <label class="form-label">OVERHEAD & PROFIT (%)</label>
+                        <input type="number" id="overhead" class="form-input" value="0" onchange="calculateTotal()">
+                    </div>
+
+                    <div class="form-group" style="margin: 12px 0;">
+                        <label class="form-label">สวนลด (บาท)</label>
+                        <input type="number" id="discount" class="form-input" value="0" onchange="calculateTotal()">
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="vat-check" checked onchange="calculateTotal()">
+                        <label class="form-label" style="margin: 0;">รวมภาษีมูลค่าเพิ่ม 7%</label>
+                    </div>
+
+                    <div class="summary-row">
+                        <span class="summary-label">VAT 7%</span>
+                        <span class="summary-value" id="vat">฿0.00</span>
+                    </div>
+
+                    <div class="summary-row total">
+                        <span class="summary-label">ยอดรวมสุทธิ</span>
+                        <span class="summary-value" id="total-price">฿0.00</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">เงื่อนไขชำระเงิน</label>
+                    <textarea id="payment-terms" class="form-input textarea" placeholder="เช่น จวดที่ 1: 50% ก่อนเริ่มงาน..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Button -->
+        <button class="bottom-button" onclick="publishQuotation()">
+            📋 บันทึกใบเสนอราคา
+        </button>
+    </div>
+
+    <script>
+        // Database items (from database.html)
+        const priceDatabase = [
+            { id: 1, name: "แก้ไขผนังแตกร้าว บุดรอยร้าวและเชาะร้อง V อุดรอยร้าว ด้วย non-shrink", unit: "งาน", price: 4650.00 },
+            { id: 2, name: "งานรีอุประเบื้องยาง SPC (รวมพื้นกระเบื้องยาง)", unit: "ตร.ม.", price: 850.00 },
+            { id: 3, name: "งานหาสีผนังภายใน (สีเบเยอร์ ดูคล ภายใน คึ่งเงาหรือเทียบเท่า)", unit: "ตร.ม.", price: 580.00 },
+            { id: 4, name: "งานไม้วชิดและทาสีระเบียงนอก", unit: "ตร.ม.", price: 620.00 },
+            { id: 5, name: "รื่อและประเบื้องพื้นห้องนั้า (ไม่รวมกระเบื้อง)", unit: "ตร.ม.", price: 950.00 },
+            { id: 6, name: "งานรีอุและติดตั้งสุขภัณฑ์", unit: "งาน", price: 2500.00 },
+        ];
+
+        let quotationItems = [];
+
+        // Initialize
+        document.getElementById('quote-date').valueAsDate = new Date();
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function addItemFromDB() {
+            const selectedId = prompt('ใส่รหัสรายการ (1-6):\n1: แก้ไขผนัง\n2: รีอุประเบื้อง\n3: ทาสี\n4: ไม้วชิด\n5: รื่อพื้น\n6: สุขภัณฑ์');
+            
+            if (!selectedId) return;
+            
+            const item = priceDatabase.find(i => i.id === parseInt(selectedId));
+            if (!item) {
+                alert('ไม่พบรายการ');
+                return;
+            }
+
+            const qty = parseFloat(prompt('จำนวน:', '1'));
+            if (isNaN(qty)) return;
+
+            quotationItems.push({
+                id: Date.now(),
+                ...item,
+                quantity: qty
+            });
+
+            renderItems();
+            calculateTotal();
+        }
+
+        function addCustomItem() {
+            const name = prompt('ชื่องาน:');
+            if (!name) return;
+
+            const unit = prompt('หน่วย:', 'งาน');
+            if (!unit) return;
+
+            const price = parseFloat(prompt('ราคา:', '0'));
+            if (isNaN(price)) return;
+
+            const qty = parseFloat(prompt('จำนวน:', '1'));
+            if (isNaN(qty)) return;
+
+            quotationItems.push({
+                id: Date.now(),
+                name: name,
+                unit: unit,
+                price: price,
+                quantity: qty
+            });
+
+            renderItems();
+            calculateTotal();
+        }
+
+        function renderItems() {
+            const container = document.getElementById('items-list');
+            container.innerHTML = '';
+
+            quotationItems.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                const html = `
+                    <div class="item-card">
+                        <button class="remove-item-btn" onclick="removeItem(${item.id})">ลบ</button>
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-price">฿${item.price.toLocaleString()} / ${item.unit}</div>
+                        <div class="item-qty">
+                            <span>จำนวน:</span>
+                            <input type="number" class="qty-input" value="${item.quantity}" 
+                                onchange="updateQty(${item.id}, this.value)">
+                            <span>${item.unit}</span>
+                            <span style="margin-left: auto;">รวม: ฿${itemTotal.toLocaleString()}</span>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        function removeItem(id) {
+            quotationItems = quotationItems.filter(i => i.id !== id);
+            renderItems();
+            calculateTotal();
+        }
+
+        function updateQty(id, qty) {
+            const item = quotationItems.find(i => i.id === id);
+            if (item) {
+                item.quantity = parseFloat(qty) || 1;
+            }
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            const subtotal = quotationItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const overhead = parseFloat(document.getElementById('overhead').value) || 0;
+            const discount = parseFloat(document.getElementById('discount').value) || 0;
+            const overheadAmount = (subtotal * overhead) / 100;
+            const beforeVat = subtotal + overheadAmount - discount;
+            const vat = document.getElementById('vat-check').checked ? (beforeVat * 0.07) : 0;
+            const total = beforeVat + vat;
+
+            document.getElementById('subtotal').textContent = '฿' + subtotal.toLocaleString(undefined, {minimumFractionDigits: 2});
+            document.getElementById('vat').textContent = '฿' + vat.toLocaleString(undefined, {minimumFractionDigits: 2});
+            document.getElementById('total-price').textContent = '฿' + total.toLocaleString(undefined, {minimumFractionDigits: 2});
+        }
+
+        function saveDraft() {
+            alert('✓ บันทึก Draft สำเร็จ');
+        }
+
+        function publishQuotation() {
+            const qnNumber = document.getElementById('qn-number').value;
+            const customerName = document.getElementById('customer-name').value;
+
+            if (!customerName || quotationItems.length === 0) {
+                alert('กรุณากรอกข้อมูลและเพิ่มรายการ');
+                return;
+            }
+
+            alert('✓ บันทึกใบเสนอราคาสำเร็จ\n\nเลขที่: ' + qnNumber + '\nลูกค้า: ' + customerName);
+        }
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // Calculate on load
+        calculateTotal();
+    </script>
+</body>
+</html>
